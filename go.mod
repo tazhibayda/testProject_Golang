@@ -1,4 +1,4 @@
-module testProject
+module github.com/tazhibayda/testProject_Golang
 
 go 1.20
 

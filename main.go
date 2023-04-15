@@ -47,7 +47,7 @@ func main() {
 	fmt.Println(post.ValidateAddress("Заводоуковск, ул. Теплякова, 1В"))
 }
 
-func doCalculate(post *cdek.CDEK, test *bool) {
+func doCalculate(post *cdek.API, test *bool) {
 	tariffDescription := flag.String("tariff-description", " ", "Sort")
 	tariffName := flag.String("tariff-name", "Посылка", "Sort")
 	addrFrom := " Россия, г. Москва, Cлавянский бульвар д.1"

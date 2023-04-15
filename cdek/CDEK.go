@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-type CDEK struct {
+type API struct {
 	account        string
 	securePassword string
 	apiURL         string
@@ -23,6 +23,7 @@ type Client struct {
 	Method   string
 	Endpoint string
 }
+
 type Phone struct {
 	Number string `json:"number"`
 }
@@ -70,15 +71,15 @@ type Package struct {
 }
 
 // NewCDEK creates a new client.
-func NewCDEK(account, securePassword, apiURL string) *CDEK {
-	return &CDEK{
+func NewCDEK(account, securePassword, apiURL string) *API {
+	return &API{
 		account:        account,
 		securePassword: securePassword,
 		apiURL:         apiURL,
 	}
 }
 
-func (c *CDEK) Calculate(addrFrom string, addrTo string, size Size) ([]PriceSending, error) {
+func (c *API) Calculate(addrFrom string, addrTo string, size Size) ([]PriceSending, error) {
 	if c.apiURL == "" {
 		return nil, errors.New("API URL is empty")
 	}
@@ -130,7 +131,7 @@ func (c *CDEK) Calculate(addrFrom string, addrTo string, size Size) ([]PriceSend
 	return array.TariffCodes, nil
 }
 
-func (c *CDEK) ValidateAddress(add string) (bool, string, error) {
+func (c *API) ValidateAddress(add string) (bool, string, error) {
 
 	if add == "" {
 		return false, "", fmt.Errorf("empty address")
@@ -180,7 +181,6 @@ func (c *CDEK) ValidateAddress(add string) (bool, string, error) {
 	if err != nil {
 		return false, "", err
 	}
-
 	for _, region := range regions {
 		if strings.Contains(region.Location.Address, add) ||
 			strings.Contains(region.Location.AddressFull, add) ||
@@ -192,7 +192,7 @@ func (c *CDEK) ValidateAddress(add string) (bool, string, error) {
 	return false, add, fmt.Errorf("address is not verified")
 }
 
-func (c *CDEK) CreateOrder(from, to string, size Size, typeSending int) (string, error) {
+func (c *API) CreateOrder(from, to string, size Size, typeSending int) (string, error) {
 	endpoint := "orders"
 
 	token, _, err := c.getToken()
@@ -272,7 +272,7 @@ func (c *CDEK) CreateOrder(from, to string, size Size, typeSending int) (string,
 	return order.Entity.UUID, nil
 }
 
-func (c *CDEK) GetStatus(orderID string) (string, error) {
+func (c *API) GetStatus(orderID string) (string, error) {
 	// Construct the endpoint for the API call.
 	endpoint := "orders/" + orderID
 
@@ -333,7 +333,7 @@ func (c *CDEK) GetStatus(orderID string) (string, error) {
 	return statuses[0].Code, nil
 }
 
-func (c *CDEK) getToken() (string, int, error) {
+func (c *API) getToken() (string, int, error) {
 	data := url.Values{
 		"client_id":     {c.account},
 		"client_secret": {c.securePassword},
