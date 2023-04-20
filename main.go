@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/tazhibayda/testProject_Golang/cdek"
 	"strings"
-	"testProject/cdek"
 )
 
 func main() {
